@@ -61,92 +61,103 @@ class RecordApointmentController extends Controller
         $id = $request->input('id');
         $reson = $request->input('client_reson');
         $date = TimeRecord::find($id);
-        // dd($date);
-        if ($request->input('new') == 'add') {
-            // dd($request);
-            $id_client = $request->input('select_client');
-            $id_car = $request->input('select_car');
 
-            $record = new RecordApointment();
-            $record->id_client = $id_client;
-            $record->id_car = $id_car;
-            $record->datetime = $date->date;
-            $record->description = $reson;
-            $record->status = 0;
-            $record->save();
+        $id_client = $request->input('select_client');
+        $id_car = $request->input('select_car');
 
-            $date->status = 1;
-            $date->id_record = $record->id;
-            $date->save();
+        $record = new RecordApointment();
+        $record->id_client = $id_client;
+        $record->id_car = $id_car;
+        $record->datetime = $date->date;
+        $record->description = $reson;
+        $record->status = 0;
+        $record->save();
 
-            $dateOut = new Carbon($date->date);
-            $dateOut = $dateOut->format('Y-m-d');
-            // dd($client);
-            return redirect("/?date=" . $dateOut);
-        } elseif ($request->input('new') == 'add_car') {
-            $id_client = $request->input('select_client');
-            $mark = $request->input('add_mark');
-            $model = $request->input('add_model');
-            $gos_number = $request->input('add_gos_number');
+        $date->status = 1;
+        $date->id_record = $record->id;
+        $date->save();
 
-            $car = new Car();
-            $car->id_client = $id_client;
-            $car->mark = $mark;
-            $car->model = $model;
-            $car->gos_number = $gos_number;
-            $car->save();
+        $dateOut = new Carbon($date->date);
+        $dateOut = $dateOut->format('Y-m-d');
+        // dd($client);
+        return redirect("/?date=" . $dateOut);
+    }
 
-            $record = new RecordApointment();
-            $record->id_client = $id_client;
-            $record->id_car = $car->id;
-            $record->datetime = $date->date;
-            $record->description = $reson;
-            $record->status = 0;
-            $record->save();
+    public static function addWithNewCar(Request $request)
+    {
+        $id = $request->input('id');
+        $reson = $request->input('client_reson');
+        $date = TimeRecord::find($id);
 
-            $date->status = 1;
-            $date->id_record = $record->id;
-            $date->save();
+        $id_client = $request->input('select_client');
+        $mark = $request->input('add_mark');
+        $model = $request->input('add_model');
+        $gos_number = $request->input('add_gos_number');
 
-            $dateOut = new Carbon($date->date);
-            $dateOut = $dateOut->format('Y-m-d');
-            // dd($client);
-            return redirect("/?date=" . $dateOut);
-        } else {
-            $fio = $request->input('client_fio');
-            $number = $request->input('client_number');
-            $mark = $request->input('client_mark');
-            $model = $request->input('client_model');
-            $gos_number = $request->input('client_gos_number');
+        $car = new Car();
+        $car->id_client = $id_client;
+        $car->mark = $mark;
+        $car->model = $model;
+        $car->gos_number = $gos_number;
+        $car->save();
 
-            $client = new Client();
-            $client->fio = $fio;
-            $client->number = $number;
-            $client->save();
+        $record = new RecordApointment();
+        $record->id_client = $id_client;
+        $record->id_car = $car->id;
+        $record->datetime = $date->date;
+        $record->description = $reson;
+        $record->status = 0;
+        $record->save();
 
-            $car = new Car();
-            $car->id_client = $client->id;
-            $car->mark = $mark;
-            $car->model = $model;
-            $car->gos_number = $gos_number;
-            $car->save();
+        $date->status = 1;
+        $date->id_record = $record->id;
+        $date->save();
 
-            $record = new RecordApointment();
-            $record->id_client = $client->id;
-            $record->id_car = $car->id;
-            $record->datetime = $date->date;
-            $record->description = $reson;
-            $record->status = 0;
-            $record->save();
+        $dateOut = new Carbon($date->date);
+        $dateOut = $dateOut->format('Y-m-d');
+        // dd($client);
+        return redirect("/?date=" . $dateOut);
+    }
 
-            $date->status = 1;
-            $date->id_record = $record->id;
-            $date->save();
+    public static function newClientAndCar(Request $request)
+    {
+        $id = $request->input('id');
+        $reson = $request->input('client_reson');
+        $date = TimeRecord::find($id);
 
-            $dateOut = new Carbon($date->date);
-            $dateOut = $dateOut->format('Y-m-d');
-            // dd($client);
-            return redirect("/?date=" . $dateOut);
-        }
+        $fio = $request->input('client_fio');
+        $number = $request->input('client_number');
+        $mark = $request->input('client_mark');
+        $model = $request->input('client_model');
+        $gos_number = $request->input('client_gos_number');
+
+        $client = new Client();
+        $client->fio = $fio;
+        $client->number = $number;
+        $client->save();
+
+        $car = new Car();
+        $car->id_client = $client->id;
+        $car->mark = $mark;
+        $car->model = $model;
+        $car->gos_number = $gos_number;
+        $car->save();
+
+        $record = new RecordApointment();
+        $record->id_client = $client->id;
+        $record->id_car = $car->id;
+        $record->datetime = $date->date;
+        $record->description = $reson;
+        $record->status = 0;
+        $record->save();
+
+        $date->status = 1;
+        $date->id_record = $record->id;
+        $date->save();
+
+        $dateOut = new Carbon($date->date);
+        $dateOut = $dateOut->format('Y-m-d');
+        // dd($client);
+        return redirect("/?date=" . $dateOut);
     }
 }

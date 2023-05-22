@@ -27,11 +27,9 @@ class ServiceScheduleController extends Controller
             $dateString = new Carbon('now');
             $dateString = $dateString->addHours(9);
             // dd(Carbon::parse(substr($dateString->toDateTimeString(),0,-3)));
+            $actual = false;
             if (Carbon::parse($data[$i]['date']) >= Carbon::parse(substr($dateString->toDateTimeString(), 0, -3))) {
                 $actual = true;
-            }
-            else{
-                $actual = false;
             }
             if ($data[$i]['status'] == 1) {
                 $record = RecordApointment::find($data[$i]['id_record']);
@@ -62,41 +60,13 @@ class ServiceScheduleController extends Controller
                     'actual' => $actual
                 ];
             }
-            // } else {
-            //     if ($data[$i]['status'] == 1) {
-            //         $record = RecordApointment::find($data[$i]['id_record']);
-            //         $client = Client::find($record->id_client);
-            //         $data_model = [
-            //             'id' => $data[$i]['id'],
-            //             'date' => substr(Carbon::parse($data[$i]['date'])->toTimeString(), 0, -3),
-            //             'status' => $data[$i]['status'],
 
-            //             'id_record' => $record->id,
-            //             'status_record' =>  $record->status,
-            //             'id_client' => $record->id_client,
-            //             'description' => $record->description,
-            //             'fio' => $client->fio,
-            //             'number' => $client->number,
-            //             'actual' => false
-
-            //         ];
-            //     } else {
-            //         $data_model = [
-            //             'id' => $data[$i]['id'],
-            //             'date' => substr(Carbon::parse($data[$i]['date'])->toTimeString(), 0, -3),
-            //             'status' => $data[$i]['status'],
-            //             'statusStr' => "Свободно",
-            //             'actual' => false
-            //         ];
-            //     }
-            // }
 
             array_push($data_out_filter, $data_model);
 
             $i++;
         }
 
-        // dd($data_out_filter);
 
         return view('serviceScheduleView', [
             'dates' => $data_out_filter,
@@ -125,8 +95,6 @@ class ServiceScheduleController extends Controller
         $dates = TimeRecord::whereIn('id_record', $id_records)->get();
         // dd($dates);
         $dateInput = $request->input('date') ?? date('Y-m-d');
-        // $dates = TimeRecord::where('date', 'like', "%" . $dateInput . "%")->get();
-        // ServiceScheduleController::setMonth();
 
         $data = json_decode($dates, true, 512, JSON_THROW_ON_ERROR);
         $data_out_filter = array();
@@ -163,33 +131,6 @@ class ServiceScheduleController extends Controller
                         'actual' => true
                     ];
                 }
-            } else {
-                // if ($data[$i]['status'] == 1) {
-                //     $record = RecordApointment::find($data[$i]['id_record']);
-                //     $client = Client::find($record->id_client);
-                //     $data_model = [
-                //         'id' => $data[$i]['id'],
-                //         'date' => $data[$i]['date'],
-                //         'status' => $data[$i]['status'],
-
-                //         'id_record' => $record->id,
-                //         'status_record' =>  $record->status,
-                //         'id_client' => $record->id_client,
-                //         'description' => $record->description,
-                //         'fio' => $client->fio,
-                //         'number' => $client->number,
-                //         'actual' => false
-
-                //     ];
-                // } else {
-                //     $data_model = [
-                //         'id' => $data[$i]['id'],
-                //         'date' => $data[$i]['date'],
-                //         'status' => $data[$i]['status'],
-                //         'statusStr' => "свободно",
-                //         'actual' => false
-                //     ];
-                // }
             }
 
             array_push($data_out_filter, $data_model);

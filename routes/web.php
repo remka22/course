@@ -28,7 +28,14 @@ Route::get('/record_appointment', function (Request $request) {
     return RecordApointmentController::showView($request);
 });
 Route::post('/record_appointment', function (Request $request) {
-    return RecordApointmentController::addRecord($request);
+    if ($request->input('new') == 'add') {
+        return RecordApointmentController::addRecord($request);
+    } elseif ($request->input('new') == 'add_car') {
+        return RecordApointmentController::addWithNewCar($request);
+    } else {
+        return RecordApointmentController::newClientAndCar($request);
+    }
+
 })->name('add_record_post');
 
 Route::get('/more_inf_record', function (Request $request) {
