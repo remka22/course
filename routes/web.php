@@ -35,7 +35,6 @@ Route::post('/record_appointment', function (Request $request) {
     } else {
         return RecordApointmentController::newClientAndCar($request);
     }
-
 })->name('add_record_post');
 
 Route::get('/more_inf_record', function (Request $request) {

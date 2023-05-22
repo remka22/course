@@ -162,9 +162,6 @@ class ServiceScheduleController extends Controller
                 $liteday = [10, 11, 20, 21, 22, 23];
                 $arrayfree = $workday;
                 if ($start->dayOfWeek == 6 || $start->dayOfWeek == 0) {
-                    $dayweek = new DayWeek();
-                    $dayweek->numder = $start->dayOfWeek;
-                    $dayweek->save();
                     $arrayfree = $liteday;
                 }
                 for ($j = 0; $j < 24; $j++) {
