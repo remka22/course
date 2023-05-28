@@ -2,7 +2,8 @@
 
 @section('content')
     <form id="formAction" method="POST" action="{{ route('schedule') }}">
-        <nav class="navbar navbar-expand-lg bg-light ">
+        <nav class="navbar navbar-expand-lg bg-light"
+            style="position:fixed; top:0; width: 100%; overflow: hidden;background-color: #333;">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-2 mb-2 mb-lg-0">
@@ -15,9 +16,9 @@
                         @csrf
                         <div class="d-flex">
                             <div class="d-flex col-12 justify-content-center">
-                                <input name="fio" type="text" class="form-control me-2" placeholder="ФИО клиента"
+                                <input dusk="fio" name="fio" type="text" class="form-control me-2" placeholder="ФИО клиента"
                                     required value="{{ $fio }}">
-                                <button class="btn btn-primary me-2" type="submit">Найти</button>
+                                <button name="find_record_fio_bt" class="btn btn-primary me-2" type="submit">Найти</button>
                             </div>
                             <div class="d-flex col-4">
                                 <input onchange="redicect()" type="date" id="dateInput" value="{{ $dateInput }}"
@@ -36,7 +37,7 @@
         </nav>
 
 
-        <div class="container">
+        <div class="container mt-5">
             <div class="d-flex align-items-center justify-content-center">
                 <div class="col-8 d-flex flex-column">
 
@@ -60,21 +61,27 @@
                                         <tr style="background: rgba(102, 102, 102, 0.2);">
                                     @endif
                                     @if ($date['status'] == 0)
-                                        <td><h5 class="mt-1">{{ $date['date'] }}</h5></td>
+                                        <td>
+                                            <h5 class="mt-1">{{ $date['date'] }}</h5>
+                                        </td>
                                         <td></td>
-                                        <td><h6 class="mt-2">{{ $date['statusStr'] }}<h6></td>
+                                        <td>
+                                            <h6 class="mt-2">{{ $date['statusStr'] }}<h6>
+                                        </td>
                                         <td>
                                             <div>
                                                 @if ($date['actual'])
-                                                    <a href="record_appointment?id={{ $date['id'] }}"
+                                                    <a dusk="recordBt{{ $date['id'] }}" href="record_appointment?id={{ $date['id'] }}"
                                                         class="btn btn-primary">Записать</a>
                                                 @else
-                                                    <a class="btn btn-primary disabled">Записать</a>
+                                                    <h6 class="mt-2">Запись невозможна</h6>
                                                 @endif
                                             </div>
                                         </td>
                                     @else
-                                        <td><h5 class="mt-3">{{ $date['date'] }}</h5></td>
+                                        <td>
+                                            <h5 class="mt-3">{{ $date['date'] }}</h5>
+                                        </td>
                                         <td>
                                             <div class="d-flex mb-1 mt-2">
                                                 <label class="me-2">Клиент: </label>
@@ -87,11 +94,16 @@
                                         </td>
                                         @switch($date['status_record'])
                                             @case(0)
-                                                <td><h6 class="mt-3">Ожидается <i class="bi bi-clock"></i></h6></td>
+                                                <td>
+                                                    <h6 class="mt-3">Ожидается <i class="bi bi-clock"></i></h6>
+                                                </td>
                                             @break
 
                                             @case(1)
-                                                <td><h6 class="mt-3">Выполнено <i class="bi bi-check-square"></i><h6></td>
+                                                <td>
+                                                    <h6 class="mt-3">Выполнено <i class="bi bi-check-square"></i>
+                                                        <h6>
+                                                </td>
                                             @break
                                         @endswitch
                                         <td>

@@ -160,4 +160,5 @@ class RecordApointmentController extends Controller
         // dd($client);
         return redirect("/?date=" . $dateOut);
     }
+
 }

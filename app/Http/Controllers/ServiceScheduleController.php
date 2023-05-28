@@ -21,23 +21,42 @@ class ServiceScheduleController extends Controller
         ServiceScheduleController::setMonth();
 
         $data = json_decode($dates, true, 512, JSON_THROW_ON_ERROR);
+        $data_out_filter = ServiceScheduleController::makeDataArrayTimeRecord($data, 9);
+
+
+        return view('serviceScheduleView', [
+            'dates' => $data_out_filter,
+            'dateInput' => $dateInput,
+            'fio' => '',
+            'statusPage' => $statusPage
+        ]);
+    }
+
+    public static function makeDataArrayTimeRecord($data, $hoursAdd){
         $data_out_filter = array();
         $i = 0;
         while ($i < count($data)) {
             $dateString = new Carbon('now');
-            $dateString = $dateString->addHours(9);
+            $dateString = $dateString->addHours($hoursAdd);
             // dd(Carbon::parse(substr($dateString->toDateTimeString(),0,-3)));
+
             $actual = false;
             if (Carbon::parse($data[$i]['date']) >= Carbon::parse(substr($dateString->toDateTimeString(), 0, -3))) {
                 $actual = true;
             }
+
+            $dateForData = $data[$i]['date'];
+            if ($hoursAdd == 9){
+                $dateForData = substr(Carbon::parse($data[$i]['date'])->toTimeString(), 0, -3);
+            }
+
             if ($data[$i]['status'] == 1) {
                 $record = RecordApointment::find($data[$i]['id_record']);
                 $client = Client::find($record->id_client);
                 $car = Car::find($record->id_car);
                 $data_model = [
                     'id' => $data[$i]['id'],
-                    'date' => substr(Carbon::parse($data[$i]['date'])->toTimeString(), 0, -3),
+                    'date' => $dateForData,
                     'status' => $data[$i]['status'],
 
                     'id_record' => $record->id,
@@ -54,7 +73,7 @@ class ServiceScheduleController extends Controller
             } else {
                 $data_model = [
                     'id' => $data[$i]['id'],
-                    'date' => substr(Carbon::parse($data[$i]['date'])->toTimeString(), 0, -3),
+                    'date' => $dateForData,
                     'status' => $data[$i]['status'],
                     'statusStr' => "Свободно",
                     'actual' => $actual
@@ -66,14 +85,7 @@ class ServiceScheduleController extends Controller
 
             $i++;
         }
-
-
-        return view('serviceScheduleView', [
-            'dates' => $data_out_filter,
-            'dateInput' => $dateInput,
-            'fio' => '',
-            'statusPage' => $statusPage
-        ]);
+        return $data_out_filter;
     }
 
     public static function getRecordFio(Request $request)
@@ -97,46 +109,8 @@ class ServiceScheduleController extends Controller
         $dateInput = $request->input('date') ?? date('Y-m-d');
 
         $data = json_decode($dates, true, 512, JSON_THROW_ON_ERROR);
-        $data_out_filter = array();
-        $i = 0;
-        while ($i < count($data)) {
-            $dateString = new Carbon('now');
-            $dateString = $dateString->addHours(8);
-            // dd(Carbon::parse(substr($dateString->toDateTimeString(),0,-3)));
-            if (Carbon::parse($data[$i]['date']) >= Carbon::parse(substr($dateString->toDateTimeString(), 0, -3))) {
-                if ($data[$i]['status'] == 1) {
-                    $record = RecordApointment::find($data[$i]['id_record']);
-                    $client = Client::find($record->id_client);
-                    $data_model = [
-                        'id' => $data[$i]['id'],
-                        'date' => $data[$i]['date'],
-                        'status' => $data[$i]['status'],
+        $data_out_filter = ServiceScheduleController::makeDataArrayTimeRecord($data, 8);
 
-                        'id_record' => $record->id,
-                        'status_record' =>  $record->status,
-                        'id_client' => $record->id_client,
-                        'description' => $record->description,
-                        'fio' => $client->fio,
-                        'number' => $client->number,
-
-                        'actual' => true
-
-                    ];
-                } else {
-                    $data_model = [
-                        'id' => $data[$i]['id'],
-                        'date' => $data[$i]['date'],
-                        'status' => $data[$i]['status'],
-                        'statusStr' => "Свободно",
-                        'actual' => true
-                    ];
-                }
-            }
-
-            array_push($data_out_filter, $data_model);
-
-            $i++;
-        }
 
         return view('serviceScheduleView', [
             'dates' => $data_out_filter,

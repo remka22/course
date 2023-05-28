@@ -19,7 +19,7 @@
                             onclick='showFindClient("find")'>Выбрать
                             клиента</a>
                         <div class=" mb-1 ms-3 me-3">или</div>
-                        <a href="#" class="btn btn-outline-primary mb-1" id="client_add_menu_bt"
+                        <a href="#" dusk="new_client" class="btn btn-outline-primary mb-1" id="client_add_menu_bt"
                             onclick='showFindClient("add")'>Новый
                             клиент</a>
                     </div>
@@ -92,33 +92,33 @@
                     {{--  --}}
                     <div class="col d-flex align-items-center justify-content-center">
                         <input name="client_fio" id="client_fio" type="text" class="form-control mb-1"
-                            placeholder="ФИО клиента" style="display: none">
+                            dusk="fio" placeholder="ФИО клиента" style="display: none">
                     </div>
                     <div class="col d-flex align-items-center justify-content-center">
                         <input name="client_number" id="client_number" type="text" class="form-control mb-1"
-                            placeholder="Номер телефона" style="display: none">
+                            dusk="number" placeholder="Номер телефона" style="display: none">
                     </div>
                     <div class="col d-flex align-items-center justify-content-center">
                         <input name="client_mark" id="client_mark" type="text" class="form-control mb-1"
-                            placeholder="Марка автомобиля" style="display: none">
+                            dusk="mark" placeholder="Марка автомобиля" style="display: none">
                     </div>
                     <div class="col d-flex align-items-center justify-content-center">
                         <input name="client_model" id="client_model" type="text" class="form-control mb-1"
-                            placeholder="Модель автомобиля" style="display: none">
+                        dusk="model" placeholder="Модель автомобиля" style="display: none">
                     </div>
                     <div class="col d-flex align-items-center justify-content-center">
                         <input name="client_gos_number" id="client_gos_number" type="text" class="form-control  mb-1"
-                            placeholder="Гос. номер автомобиля" style="display: none">
+                        dusk="gos_number"placeholder="Гос. номер автомобиля" style="display: none">
                     </div>
                     {{--  --}}
                     <div class="col d-flex align-items-center justify-content-center mt-2">
                         <textarea name="client_reson" id="client_reson" type="text" class="form-control  mb-1" required
-                            placeholder="Причина посещения автосервиса"></textarea>
+                        dusk="resone" placeholder="Причина посещения автосервиса"></textarea>
                     </div>
                     {{--  --}}
                     <div class="col d-flex align-items-center justify-content-center mt-3">
                         <a id="back" href="/" class="btn btn-primary me-3 mb-1" id="">Назад</a>
-                        <button value="add" id="save" class="btn btn-primary  mb-1"
+                        <button  dusk="add" value="add" id="save" class="btn btn-primary  mb-1"
                             id="">Создать</button>
                     </div>
                 </div>
