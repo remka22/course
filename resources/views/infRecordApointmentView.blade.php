@@ -66,7 +66,7 @@
                                     style="display: none">Подтвердить выполнение</button>
                                 <a id="saveCancel" class="btn btn-primary me-3 mb-1" data-bs-toggle="modal"
                                     data-bs-target="#cancelModal" style="display: none">Подтвердить
-                                    отмену записи</a>
+                                    неявку клиента</a>
                                 <!-- cancelModal -->
                                 <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel"
                                     aria-hidden="true">

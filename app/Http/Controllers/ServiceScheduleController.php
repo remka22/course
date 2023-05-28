@@ -92,7 +92,14 @@ class ServiceScheduleController extends Controller
     {
         $statusPage = "record";
         $fio = $request->input('fio');
-        $clients = Client::where('fio', 'like', "%$fio%")->get();
+        $fio_array = preg_split("/ /", $fio);
+        $clients = Client::query();
+        foreach ($fio_array as $fio_a){
+            $str = $fio_a;
+            $clients = $clients->where('fio', 'like', "%$str%");
+        }
+        $clients = $clients->get();
+
 
         $id_clients = [];
         foreach ($clients as $client) {

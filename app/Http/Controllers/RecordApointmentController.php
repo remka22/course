@@ -33,9 +33,17 @@ class RecordApointmentController extends Controller
         $clients = null;
         $cars = null;
         $fio = $request->get('fio');
+
         // dd($fio);
         if ($fio != '') {
-            $clients = Client::where('fio', 'like', "%$fio%")->get();
+            $fio_array = preg_split("/ /", $fio);
+            $clients = Client::query();
+            foreach ($fio_array as $fio_a) {
+                $str = $fio_a;
+                $clients = $clients->where('fio', 'like', "%$str%");
+            }
+            $clients = $clients->get();
+
             $id_clients = array();
             foreach ($clients as $client) {
                 array_push($id_clients, $client->id);
@@ -160,5 +168,4 @@ class RecordApointmentController extends Controller
         // dd($client);
         return redirect("/?date=" . $dateOut);
     }
-
 }
