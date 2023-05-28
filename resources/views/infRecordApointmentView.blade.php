@@ -39,14 +39,21 @@
                                         <th scope="row">Статус:</th>
                                         <td>
                                             <div class="col-6">
-                                                <select id="selectStatus" onchange="saveMode()" required name="selectStatus"
-                                                    class="form-select mb-1" aria-label="Default select example">
-                                                    @if ($actual)
-                                                        <option value="0">ожидается</option>
-                                                    @else
-                                                        <option value="1">выполнено</option>
-                                                    @endif
-                                                    <option value="2">неявка</option>
+                                                @if ($record->status == 2)
+                                                <select id="selectStatus" onchange="saveMode()" required
+                                                        name="selectStatus" class="form-select mb-1" disabled
+                                                        aria-label="Default select example">
+                                                @else
+                                                    <select id="selectStatus" onchange="saveMode()" required
+                                                        name="selectStatus" class="form-select mb-1"
+                                                        aria-label="Default select example">
+                                                @endif
+                                                @if ($actual)
+                                                    <option value="0">ожидается</option>
+                                                @else
+                                                    <option value="1">выполнено</option>
+                                                @endif
+                                                <option value="2">неявка</option>
                                                 </select>
                                                 <script>
                                                     var record = @json($record, JSON_UNESCAPED_UNICODE);
@@ -60,7 +67,7 @@
                             </table>
 
                             <div class="col d-flex align-items-center justify-content-center mt-3">
-                                <a id="back" href="/?date={{ $dateback }}"
+                                <a id="back" onclick="history.back();"
                                     class="btn btn-primary me-3 mb-1">Назад</a>
                                 <button id="save" href="#" class="btn btn-primary  mb-1"
                                     style="display: none">Подтвердить выполнение</button>

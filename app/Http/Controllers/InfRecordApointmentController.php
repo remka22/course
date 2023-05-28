@@ -14,20 +14,41 @@ class InfRecordApointmentController extends Controller
 {
     public static function showView(Request $request)
     {
-        $id = $request->get('id');
-        $date = TimeRecord::find($id);
-        $record = RecordApointment::find($date->id_record);
-        $client = Client::find($record->id_client);
-        $car = Car::find($record->id_car);
+        // dd($id = $request->get('id'));
+        if ($request->get('id') != null) {
+            $id = $request->get('id');
 
-        $actual = true;
-        $dateString = new Carbon('now');
-        $dateString = $dateString->addHours(8);
-        if (Carbon::parse($date->date) <= Carbon::parse(substr($dateString->toDateTimeString(), 0, -3))) {
-            $actual = false;
+            $date = TimeRecord::find($id);
+            $record = RecordApointment::find($date->id_record);
+            $client = Client::find($record->id_client);
+            $car = Car::find($record->id_car);
+
+            $actual = true;
+            $dateString = new Carbon('now');
+            $dateString = $dateString->addHours(8);
+            if (Carbon::parse($date->date) <= Carbon::parse(substr($dateString->toDateTimeString(), 0, -3))) {
+                $actual = false;
+            }
+            $dateOut = new Carbon($date->date);
+            $dateOut = $dateOut->format('Y-m-d');
         }
-        $dateOut = new Carbon($date->date);
-        $dateOut = $dateOut->format('Y-m-d');
+        else{
+            $id_record = $request->get('id_record');
+
+            $record = RecordApointment::find($id_record);
+            $date = TimeRecord::where('date', '=', $record->datetime)->get()->first();
+            $client = Client::find($record->id_client);
+            $car = Car::find($record->id_car);
+
+            $actual = true;
+            $dateString = new Carbon('now');
+            $dateString = $dateString->addHours(8);
+            if (Carbon::parse($date->date) <= Carbon::parse(substr($dateString->toDateTimeString(), 0, -3))) {
+                $actual = false;
+            }
+            $dateOut = new Carbon($date->date);
+            $dateOut = $dateOut->format('Y-m-d');
+        }
 
         return view('InfRecordApointmentView', [
             'date' => $date,

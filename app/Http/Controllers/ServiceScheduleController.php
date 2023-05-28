@@ -32,7 +32,8 @@ class ServiceScheduleController extends Controller
         ]);
     }
 
-    public static function makeDataArrayTimeRecord($data, $hoursAdd){
+    public static function makeDataArrayTimeRecord($data, $hoursAdd)
+    {
         $data_out_filter = array();
         $i = 0;
         while ($i < count($data)) {
@@ -46,7 +47,7 @@ class ServiceScheduleController extends Controller
             }
 
             $dateForData = $data[$i]['date'];
-            if ($hoursAdd == 9){
+            if ($hoursAdd == 9) {
                 $dateForData = substr(Carbon::parse($data[$i]['date'])->toTimeString(), 0, -3);
             }
 
@@ -81,6 +82,8 @@ class ServiceScheduleController extends Controller
             }
 
 
+
+
             array_push($data_out_filter, $data_model);
 
             $i++;
@@ -88,13 +91,74 @@ class ServiceScheduleController extends Controller
         return $data_out_filter;
     }
 
+    public static function makeDataArrayRecord($records, $hoursAdd)
+    {
+        // dd($records);
+        $data_out_filter = array();
+        $dateString = new Carbon('now');
+        $dateString = $dateString->addHours($hoursAdd);
+        foreach ($records as $record) {
+            if ($record->status == 2) {
+                $client = Client::find($record->id_client);
+                $data_model = [
+                    'date' => $record->datetime,
+                    'status' => 2,
+                    'actual' => false,
+                    'id' => $record->id,
+
+                    'id_record' => $record->id,
+                    'status_record' =>  $record->status,
+                    'id_client' => $record->id_client,
+                    'description' => $record->description,
+                    'fio' => $client->fio,
+                    'number' => $client->number
+                ];
+            } else {
+                $date = TimeRecord::where('date', '=', $record->datetime)->get()->first();
+                // dd($date);
+                $dateForData = $date->date;
+                if ($hoursAdd == 9) {
+                    $dateForData = substr(Carbon::parse($date->date)->toTimeString(), 0, -3);
+                }
+
+                $actual = false;
+                if (Carbon::parse($date->date) >= Carbon::parse(substr($dateString->toDateTimeString(), 0, -3))) {
+                    $actual = true;
+                }
+
+                $client = Client::find($record->id_client);
+                $car = Car::find($record->id_car);
+                $data_model = [
+                    'id' => $date->id,
+                    'date' => $dateForData,
+                    'status' => $date->status,
+
+                    'id_record' => $record->id,
+                    'status_record' =>  $record->status,
+                    'id_client' => $record->id_client,
+                    'description' => $record->description,
+                    'fio' => $client->fio,
+                    'number' => $client->number,
+                    'car' => "$car->mark $car->model $car->gos_number",
+
+                    'actual' => $actual
+
+                ];
+            }
+            array_push($data_out_filter, $data_model);
+        }
+
+        return $data_out_filter;
+    }
+
+
     public static function getRecordFio(Request $request)
     {
         $statusPage = "record";
         $fio = $request->input('fio');
         $fio_array = preg_split("/ /", $fio);
         $clients = Client::query();
-        foreach ($fio_array as $fio_a){
+        foreach ($fio_array as $fio_a) {
             $str = $fio_a;
             $clients = $clients->where('fio', 'like', "%$str%");
         }
@@ -107,16 +171,16 @@ class ServiceScheduleController extends Controller
         }
         $records = RecordApointment::whereIn('id_client', $id_clients)->get();
         // dd($records);
-        $id_records = [];
-        foreach ($records as $record) {
-            array_push($id_records, $record->id);
-        }
-        $dates = TimeRecord::whereIn('id_record', $id_records)->get();
+        // $id_records = [];
+        // foreach ($records as $record) {
+        //     array_push($id_records, $record->id);
+        // }
+        // $dates = TimeRecord::whereIn('id_record', $id_records)->get();
         // dd($dates);
         $dateInput = $request->input('date') ?? date('Y-m-d');
 
-        $data = json_decode($dates, true, 512, JSON_THROW_ON_ERROR);
-        $data_out_filter = ServiceScheduleController::makeDataArrayTimeRecord($data, 8);
+        // $data = json_decode($dates, true, 512, JSON_THROW_ON_ERROR);
+        $data_out_filter = ServiceScheduleController::makeDataArrayRecord($records, 8);
 
 
         return view('serviceScheduleView', [

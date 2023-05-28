@@ -16,8 +16,8 @@
                         @csrf
                         <div class="d-flex">
                             <div class="d-flex col-12 justify-content-center">
-                                <input dusk="fio" name="fio" type="text" class="form-control me-2" placeholder="ФИО клиента"
-                                    required value="{{ $fio }}">
+                                <input dusk="fio" name="fio" type="text" class="form-control me-2"
+                                    placeholder="ФИО клиента" required value="{{ $fio }}">
                                 <button name="find_record_fio_bt" class="btn btn-primary me-2" type="submit">Найти</button>
                             </div>
                             <div class="d-flex col-4">
@@ -71,14 +71,15 @@
                                         <td>
                                             <div>
                                                 @if ($date['actual'])
-                                                    <a dusk="recordBt{{ $date['id'] }}" href="record_appointment?id={{ $date['id'] }}"
+                                                    <a dusk="recordBt{{ $date['id'] }}"
+                                                        href="record_appointment?id={{ $date['id'] }}"
                                                         class="btn btn-primary">Записать</a>
                                                 @else
                                                     <h6 class="mt-2">Запись невозможна</h6>
                                                 @endif
                                             </div>
                                         </td>
-                                    @else
+                                    @elseif ($date['status'] == 1)
                                         <td>
                                             <h5 class="mt-3">{{ $date['date'] }}</h5>
                                         </td>
@@ -109,6 +110,31 @@
                                         <td>
                                             <div class="mt-2">
                                                 <a href="more_inf_record?id={{ $date['id'] }}"
+                                                    class="btn btn-primary">Подробнее</a>
+                                            </div>
+                                        </td>
+                                    @elseif ($date['status'] == 2)
+                                        <td>
+                                            <h5 class="mt-3">{{ $date['date'] }}</h5>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex mb-1 mt-2">
+                                                <label class="me-2">Клиент: </label>
+                                                <label><b>{{ $date['fio'] }}</b></label>
+                                            </div>
+                                            <div class="d-flex mb-2">
+                                                <label class="me-2">Номер телефона:</label>
+                                                <label><b>{{ $date['number'] }}</b></label>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <h6 class="mt-3">Неявка <i class="bi bi-x-square"></i></h6>
+                                        </td>
+
+                                        <td>
+                                            <div class="mt-2">
+                                                <a href="more_inf_record?id_record={{ $date['id'] }}"
                                                     class="btn btn-primary">Подробнее</a>
                                             </div>
                                         </td>
